@@ -3,6 +3,8 @@ var http = require('http')
   , url = require('url')
   , qs = require('querystring')
   , path = require('path')
+  , port = '8080'
+
 
 
 var  movies = ['Big Fish', 'Doctor Strange', 'Inception', 'Jaws', 'Jaws 2', 'Jaws 3', 'Space Jam', 'Space James III: Leberon\'s Revenge', 'Space James IV: Return of the James',
@@ -93,7 +95,7 @@ function handleSearch(req, movies) {
   })
 }
 
-server.listen(8080);
+server.listen(process.env.PORT || port)
 console.log('listening on 8080');
 
 // subroutines
