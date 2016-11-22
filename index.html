@@ -1,0 +1,79 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css?family=Itim" rel="stylesheet">
+  <script src="https://use.fontawesome.com/53f66de2be.js"></script>
+</head>
+<body>
+  <h2>My current movies are:</h2>
+  <div id="movies"> </div>
+  <form action="putNewMovie" method="post" onsubmit="return false;">
+  <label for="newmovie" > Add New Movie</label>
+  <input id="newmovieTextBox" type="text" name="newmovie">
+  <label for="deletemovie" > Remove a Movie</label>
+  <input id="deleteMovieTextBox" name="deletemovie" type="text">
+  <button id='file_submit' type="submit" onclick="populate();">Submit</button>
+  <br>
+  <br>
+  <a href='/search'>Click Here to Search Movies!</a>
+  </form>
+  </body>
+</html>
+
+<script>
+
+getMyList()
+
+function populate() {
+  var newMovieDiv = document.getElementById('newmovieTextBox')
+  var deleteMovieDiv = document.getElementById('deleteMovieTextBox')
+
+  function reqListener () {
+    getMyList()
+  }
+  
+  var oReq = new XMLHttpRequest();
+
+//  oReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  
+  // defining behavior for when the response comes back to us
+  oReq.addEventListener("load", reqListener);
+
+  oReq.open("POST", "/putNewMovie", true);
+
+  // MAJOR KEY-- build form in XML http request SEND function
+  oReq.send('newmovie='+newMovieDiv.value+'&deletemovie='+deleteMovieDiv.value)
+
+}
+
+// TODO start here
+// build a list of classes from an array
+function buildList( lit ) { // aka list
+  var div = document.getElementById('movies')
+  div.innerHTML = "";
+  // for each class in 'lit', add a paragraph tag + class name
+  lit.forEach(function(cl) {
+    div.innerHTML += '<p>' + cl + '</p>';
+  })
+}
+
+function getMyList() {
+
+  function reqListener () {
+    var tmplist = this.responseText.split(',');
+    console.log( tmplist )
+    buildList( tmplist )
+  }
+  
+  var oReq = new XMLHttpRequest();
+  
+  // defining behavior for when the response comes back to us
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", "/movies");
+  oReq.send();
+
+}
+
+</script>
+
+</html>

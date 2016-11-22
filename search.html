@@ -1,0 +1,72 @@
+<html>'
+
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css?family=Itim" rel="stylesheet">
+<script src="https://use.fontawesome.com/53f66de2be.js"></script>
+</head>
+
+<body>
+<h1>Movie Search!</h1>
+  <form action="search" method="search" onsubmit="return false;">
+  <input type="text" id="searchmovieTextBox" name="search" />
+  <button id="search_btn" type="submit"  onclick="populate();"><i class="fa fa-search fa-lg fw"></i></button>
+</form>
+<div id="movies"> </div>
+ <a href='/index.html'>Click Here to Add/Delete Movies!</a>
+</body>
+<script>
+
+getMyList()
+
+function populate() {
+  var searchMovieDiv = document.getElementById('searchmovieTextBox')
+
+  function reqListener () {
+    getMyList()
+  }
+  
+  var oReq = new XMLHttpRequest();
+
+//  oReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  
+  // defining behavior for when the response comes back to us
+  oReq.addEventListener("load", reqListener);
+
+  oReq.open("POST", "/searchMovies", true);
+
+  // MAJOR KEY-- build form in XML http request SEND function
+  oReq.send('search='+searchMovieDiv.value)
+
+}
+
+function buildList( lit ) { // aka list
+  var div = document.getElementById('movies')
+  div.innerHTML = "";
+  // for each class in 'lit', add a paragraph tag + class name
+  lit.forEach(function(cl) {
+    div.innerHTML += '<p>' + cl + '</p>';
+  })
+}
+
+function getMyList() {
+
+  function reqListener () {
+    var tmplist = this.responseText.split(',');
+    console.log( tmplist )
+    buildList( tmplist )
+  }
+  
+  var oReq = new XMLHttpRequest();
+  
+  // defining behavior for when the response comes back to us
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", "/searchMovies");
+  oReq.send();
+
+}
+
+
+</script>
+
+</html>
